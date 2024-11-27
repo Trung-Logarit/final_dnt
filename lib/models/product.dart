@@ -2,38 +2,36 @@ class Product {
   final String id;
   final String title;
   final String description;
-  final double price;
+  final int price;
+  final String category; // Thêm thuộc tính danh mục
   final String? imagePath;
-  final String category;
 
   Product({
     required this.id,
     required this.title,
     required this.description,
     required this.price,
+    required this.category, // Yêu cầu danh mục khi tạo sản phẩm
     this.imagePath,
-    required this.category,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) {
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'description': description,
+        'price': price,
+        'category': category,
+        'imagePath': imagePath,
+      };
+
+  static Product fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],
       title: json['title'],
       description: json['description'],
       price: json['price'],
-      imagePath: json['imagePath'],
       category: json['category'],
+      imagePath: json['imagePath'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'price': price,
-      'imagePath': imagePath,
-      'category': category,
-    };
   }
 }

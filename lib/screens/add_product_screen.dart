@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../models/product.dart';
 import '../services/product_service.dart';
 
@@ -11,17 +10,16 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final ProductService productService = ProductService();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final ProductService _productService = ProductService();
   File? _selectedImage;
-  String selectedCategory = 'Thời trang'; // Danh mục mặc định
+  String _selectedCategory = 'Quần áo'; // Danh mục mặc định
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -29,93 +27,84 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
   }
 
-  void _saveProduct() {
-    final title = _titleController.text;
-    final description = _descriptionController.text;
-    final price = double.tryParse(_priceController.text) ?? 0;
-
-    if (title.isEmpty || description.isEmpty || price <= 0 || _selectedImage == null) {
+  void _addProduct() {
+    if (_titleController.text.isEmpty ||
+        _descriptionController.text.isEmpty ||
+        _priceController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Vui lòng nhập đầy đủ thông tin và chọn hình ảnh!')),
+        SnackBar(content: Text('Vui lòng nhập đầy đủ thông tin sản phẩm!')),
       );
       return;
     }
 
     final newProduct = Product(
       id: DateTime.now().toString(),
-      title: title,
-      description: description,
-      price: price,
+      title: _titleController.text,
+      description: _descriptionController.text,
+      price: int.tryParse(_priceController.text) ?? 0,
+      category: _selectedCategory,
       imagePath: _selectedImage?.path,
-      category: selectedCategory, // Lưu danh mục được chọn
     );
 
-    productService.addProduct(newProduct);
-    Navigator.pop(context);
+    _productService.addProduct(newProduct);
+
+    Navigator.pop(context); // Quay lại trang chính
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Thêm sản phẩm'),
-      ),
-      body: Padding(
+      appBar: AppBar(title: Text('Thêm sản phẩm')),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: _titleController,
-                decoration: InputDecoration(labelText: 'Tên sản phẩm'),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: _pickImage,
+              child: Container(
+                height: 150,
+                width: double.infinity,
+                color: Colors.grey[200],
+                child: _selectedImage != null
+                    ? Image.file(_selectedImage!, fit: BoxFit.cover)
+                    : Icon(Icons.add_a_photo, color: Colors.grey, size: 50),
               ),
-              TextField(
-                controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'Mô tả sản phẩm'),
-              ),
-              TextField(
-                controller: _priceController,
-                decoration: InputDecoration(labelText: 'Giá (VNĐ)'),
-                keyboardType: TextInputType.number,
-              ),
-              DropdownButton<String>(
-                value: selectedCategory,
-                items: ['Thời trang', 'Phụ kiện', 'Điện tử']
-                    .map((category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedCategory = value;
-                    });
-                  }
-                },
-              ),
-              SizedBox(height: 20),
-              _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  : Text('Chưa chọn hình ảnh'),
-              SizedBox(height: 10),
-              ElevatedButton.icon(
-                onPressed: _pickImage,
-                icon: Icon(Icons.image),
-                label: Text('Chọn hình ảnh'),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveProduct,
-                child: Text('Thêm sản phẩm'),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(labelText: 'Tên sản phẩm'),
+            ),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(labelText: 'Mô tả'),
+            ),
+            TextField(
+              controller: _priceController,
+              decoration: InputDecoration(labelText: 'Giá (VNĐ)'),
+              keyboardType: TextInputType.number,
+            ),
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
+              items: ['Quần áo', 'Giày dép', 'Phụ kiện']
+                  .map((category) => DropdownMenuItem(
+                        value: category,
+                        child: Text(category),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value!;
+                });
+              },
+              decoration: InputDecoration(labelText: 'Danh mục'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _addProduct,
+              child: Text('Thêm sản phẩm'),
+            ),
+          ],
         ),
       ),
     );

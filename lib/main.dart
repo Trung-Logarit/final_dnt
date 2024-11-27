@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/profile_screen.dart'; // Import màn hình hồ sơ cá nhân
+import 'screens/profile_screen.dart';
+import 'screens/add_product_screen.dart';
 
 void main() {
   runApp(SecondHandApp());
@@ -15,10 +17,12 @@ class SecondHandApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/', // Route khởi đầu
       routes: {
-        '/': (ctx) => HomeScreen(),
-        '/profile': (ctx) => ProfileScreen(), // Route cho trang cá nhân
+        '/': (ctx) => LoginScreen(), // Màn hình Đăng nhập
+        '/home': (ctx) => HomeScreen(), // Màn hình chính
+        '/profile': (ctx) => ProfileScreen(), // Màn hình hồ sơ cá nhân
+        '/add-product': (ctx) => AddProductScreen(), // Màn hình thêm sản phẩm
       },
     );
   }

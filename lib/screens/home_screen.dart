@@ -10,19 +10,38 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ProductService productService = ProductService();
+  String _selectedCategory = 'Tất cả'; // Danh mục mặc định
 
   @override
   Widget build(BuildContext context) {
-    final products = productService.products;
+    final products = _selectedCategory == 'Tất cả'
+        ? productService.products
+        : productService.products
+            .where((product) => product.category == _selectedCategory)
+            .toList();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Trang chính'),
         actions: [
+          DropdownButton<String>(
+            value: _selectedCategory,
+            items: ['Tất cả', 'Quần áo', 'Giày dép', 'Phụ kiện']
+                .map((category) => DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
+                    ))
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCategory = value!;
+              });
+            },
+          ),
           IconButton(
             icon: Icon(Icons.person),
             onPressed: () {
-              Navigator.pushNamed(context, '/profile'); // Điều hướng đến trang cá nhân
+              Navigator.pushNamed(context, '/profile');
             },
           ),
         ],
@@ -57,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.pushNamed(context, '/add-product');
-          setState(() {});
+          setState(() {}); // Làm mới giao diện sau khi thêm sản phẩm
         },
         child: Icon(Icons.add),
       ),

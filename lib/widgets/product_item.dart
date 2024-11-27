@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
   final String title;
   final String description;
-  final double price;
+  final int price;
   final String? imagePath;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   const ProductItem({
     required this.title,
     required this.description,
     required this.price,
     this.imagePath,
-    this.onTap,
+    required this.onTap,
   });
 
   @override
@@ -21,71 +21,55 @@ class ProductItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            // Hiển thị hình ảnh từ file hoặc từ assets
-            imagePath != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: imagePath!.startsWith('assets/')
-                        ? Image.asset(
-                            imagePath!,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(imagePath!),
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
-                          ),
-                  )
-                : Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(Icons.image, size: 50, color: Colors.grey),
-                  ),
-            SizedBox(width: 10),
-            // Hiển thị thông tin sản phẩm
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      description,
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: ListTile(
+          leading: imagePath != null && imagePath!.isNotEmpty
+              ? _buildImage(imagePath!) // Xử lý hiển thị hình ảnh
+              : Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.grey[300],
+                  child: Icon(Icons.image, color: Colors.grey[600]),
                 ),
-              ),
+          title: Text(title),
+          subtitle: Text(description),
+          trailing: Text(
+            '${price.toString()} VNĐ',
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
             ),
-            Text(
-              '${price.toStringAsFixed(0)} VND',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[700],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildImage(String path) {
+    if (path.startsWith('http') || path.startsWith('https')) {
+      // Nếu là hình ảnh từ URL
+      return Image.network(
+        path,
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+      );
+    } else {
+      // Nếu là hình ảnh từ hệ thống cục bộ
+      return Image.file(
+        File(path),
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 50,
+            height: 50,
+            color: Colors.grey[300],
+            child: Icon(Icons.broken_image, color: Colors.grey[600]),
+          );
+        },
+      );
+    }
   }
 }

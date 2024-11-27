@@ -1,40 +1,39 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/product.dart';
 
 class ProductService {
-  static final ProductService _instance = ProductService._internal();
-  factory ProductService() => _instance;
-  ProductService._internal();
+  static const _productsKey = 'products_key'; // Khóa lưu trữ SharedPreferences
+  final List<Product> _products = [];
 
-  final List<Product> _products = [
-    Product(
-      id: '1',
-      title: 'Áo thun',
-      description: 'Áo thun cũ, còn tốt',
-      price: 100000,
-      imagePath: 'assets/images/tshirt.png',
-      category: 'Thời trang', // Danh mục Thời trang
-    ),
-    Product(
-      id: '2',
-      title: 'Giày thể thao',
-      description: 'Giày đã qua sử dụng, giá rẻ',
-      price: 250000,
-      imagePath: 'assets/images/shoes.png',
-      category: 'Phụ kiện', // Danh mục Phụ kiện
-    ),
-    Product(
-      id: '3',
-      title: 'Tai nghe ma só',
-      description: 'Nghe hay vl',
-      price: 90000,
-      imagePath: null,
-      category: 'Điện tử', // Danh mục Điện tử
-    ),
-  ];
+  ProductService() {
+    _loadProducts(); // Tự động tải sản phẩm khi khởi tạo
+  }
 
   List<Product> get products => [..._products];
 
   void addProduct(Product product) {
-    _products.add(product);
+    _products.add(product); // Thêm sản phẩm vào danh sách
+    _saveProducts(); // Lưu danh sách sản phẩm sau khi thêm
+  }
+
+  Future<void> _saveProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString =
+        jsonEncode(_products.map((product) => product.toJson()).toList());
+    prefs.setString(_productsKey, jsonString);
+  }
+
+  Future<void> _loadProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString(_productsKey);
+
+    if (jsonString != null) {
+      final productList = jsonDecode(jsonString) as List;
+      _products.clear();
+      _products.addAll(
+        productList.map((productJson) => Product.fromJson(productJson)).toList(),
+      );
+    }
   }
 }
