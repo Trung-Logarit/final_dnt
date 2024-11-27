@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/add_product_screen.dart';
+import 'screens/profile_screen.dart'; // Import màn hình hồ sơ cá nhân
 
 void main() {
   runApp(SecondHandApp());
@@ -18,9 +17,8 @@ class SecondHandApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => LoginScreen(),
-        '/home': (ctx) => HomeScreen(),
-        '/add-product': (ctx) => AddProductScreen(),
+        '/': (ctx) => HomeScreen(),
+        '/profile': (ctx) => ProfileScreen(), // Route cho trang cá nhân
       },
     );
   }

@@ -64,3 +64,4 @@ flutter:
   assets:
     - assets/images/tshirt.png
     - assets/images/shoes.png
+    - assets/images/avatar_placeholder.png
