@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/auth_service.dart';
+import '../../services/auth_service.dart';
 import '../home_screen.dart';
 import 'my_textfield.dart';
 import 'login_button.dart';
@@ -39,10 +39,7 @@ class LoginScreen extends StatelessWidget {
     // Gọi AuthService để xử lý đăng nhập
     if (authService.login(email, password)) {
       // Chuyển đến màn hình chính nếu đăng nhập thành công
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       // Hiển thị thông báo lỗi nếu đăng nhập thất bại
       showDialog(
