@@ -63,10 +63,10 @@ flutter:
 
   # Thêm thư mục assets
   assets:
-    - assets/images/shirt.png
-    - assets/images/shoes.png
-    - assets/images/avatar_placeholder.png
-    - assets/images/fb.png
-    - assets/images/gg.png
-    - assets/images/fpt.png
-#    - assets/images/.
+#    - assets/images/shirt.png
+#    - assets/images/shoes.png
+#    - assets/images/avatar_placeholder.png
+#    - assets/images/fb.png
+#    - assets/images/gg.png
+#    - assets/images/fpt.png
+    - assets/images/.
