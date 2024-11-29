@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/product_service.dart';
 import '../widgets/product_item.dart';
-import 'product_detail_screen.dart';
+import 'product/product_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

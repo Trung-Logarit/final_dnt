@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/product.dart';
-import '../services/product_service.dart';
+import '../../models/product.dart';
+import '../../services/product_service.dart';
 
 class AddProductScreen extends StatefulWidget {
   @override
