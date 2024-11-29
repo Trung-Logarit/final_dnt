@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'logout_button.dart';
 class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -10,6 +10,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String name = 'Nguyễn Văn A'; // Tên mặc định
   String email = 'nguyen.vana@example.com'; // Email mặc định
+  String phone_number ='0905657789';
   File? _avatarImage; // File ảnh đại diện
 
   // Hàm chọn ảnh từ thư viện
@@ -121,6 +122,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: Icon(Icons.edit),
                 label: Text('Chỉnh sửa thông tin'),
               ),
+            ),
+            Center(
+               heightFactor: 2,
+               child: LogoutButton(
+                 onTap: () {
+                   Navigator.pushReplacementNamed(context, '/');
+                   },
+               ),
             ),
           ],
         ),
